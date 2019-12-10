@@ -31,6 +31,7 @@ public class SimulationHandler {
 			int k = 0;
 			for(Integer i : removeIndex) {
 				activeCars.remove(i-k); // removeIndex zou sorted moeten zijn
+				removeIndex.remove(0);
 				k++;
 			}
 		}
