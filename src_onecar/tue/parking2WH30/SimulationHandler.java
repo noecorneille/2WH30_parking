@@ -1,6 +1,7 @@
 package tue.parking2WH30;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class SimulationHandler {
@@ -12,6 +13,8 @@ public class SimulationHandler {
 	private final double drivespeed = 4;
 	private final double walkspeed = 1;
 	
+	private final double occupancyRate = 0.5;
+	
 	private final int strategyNumber = 1;
 	
 	private ArrayList<Integer> occupiedSpotIndices;
@@ -19,17 +22,29 @@ public class SimulationHandler {
 	private Random random;
 		
 	public SimulationHandler() {
-		//parkingLot = new boolean[4];
 		occupiedSpotIndices = new ArrayList<Integer>();
 		random = new Random();
 		
+		initParkingSpace(occupancyRate);
+	}
+	
+	private void initParkingSpace(double probability) {
+		parkingLot = new boolean[4];
 		for(int i = 0; i < parkingLot.length; i++) {
-			if(parkingLot[i]) {
-				occupiedSpotIndices.add(i);
-			}
+			parkingLot[i] = false;
 		}
 		
-		// TODO: init parkingLot randomly
+		int numOccupied = (int)(probability * parkingLot.length);
+		
+		ArrayList<Integer> a = new ArrayList<Integer>();
+		for (int i = 0; i < parkingLot.length; i++){ 
+		    a.add(i);
+		}
+		Collections.shuffle(a);
+		for(int k : a.subList(0,numOccupied)) {
+			parkingLot[k] = true;
+			occupiedSpotIndices.add(k);
+		}
 	}
 	
 	private void emptyRandomParkingSpot() {
