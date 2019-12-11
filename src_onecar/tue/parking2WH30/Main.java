@@ -9,14 +9,14 @@ public class Main {
 		
 		m.sim = new SimulationHandler();
 		
-		double distance = 0;
+		double time = 0;
 		for(int i = 0; i < m.N; i++) {
-			double d = m.sim.updateReturnDistance();
-			distance += d;
+			double t = m.sim.updateReturnTime();
+			time += t;
 			//System.out.println(d);
 			m.sim.printParkingLot();
 		}
-		distance /= (double)m.N;
-		System.out.println(distance);
+		time /= (double)m.N;
+		System.out.println(time);
 	}
 }

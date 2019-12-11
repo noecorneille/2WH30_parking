@@ -9,10 +9,12 @@ public class SimulationHandler {
 	private final double[] drivingDistances = {1,2,3,4};
 	private final double[] walkingDistances = {2,2.5,1.5,1};
 	
+	private final double drivespeed = 4;
+	private final double walkspeed = 1;
+	
 	private final int strategyNumber = 1;
 	
 	private ArrayList<Integer> occupiedSpotIndices;
-	
 	
 	private Random random;
 		
@@ -36,14 +38,15 @@ public class SimulationHandler {
 		occupiedSpotIndices.remove(index);
 	}
 	
-	public double updateReturnDistance() {
+	// TODO: change to time
+	public double updateReturnTime() {
 		double distance = 0;
 		
 		switch(strategyNumber) {
 		case 1: // First available
 			for(int i = 0; i < parkingLot.length; i++) {
 				if(!parkingLot[i]) {
-					distance = drivingDistances[i] + walkingDistances[i];
+					distance = drivingDistances[i]/drivespeed + walkingDistances[i]/walkspeed;
 					parkingLot[i] = true;
 					occupiedSpotIndices.add(i);
 					break;
