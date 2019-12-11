@@ -4,19 +4,22 @@ public class Main {
 	public SimulationHandler sim;
 	public final int N = 10;
 	
-	public static void main(String... args) {
-		Main m = new Main();
+	public void simulation() {
+		sim = new SimulationHandler();
 		
-		m.sim = new SimulationHandler();
-		
+		// TODO: data vis
 		double time = 0;
-		for(int i = 0; i < m.N; i++) {
-			double t = m.sim.updateReturnTime();
+		for(int i = 0; i < N; i++) {
+			double t = sim.updateReturnTime();
 			time += t;
 			//System.out.println(d);
-			m.sim.printParkingLot();
+			sim.printParkingLot();
 		}
-		time /= (double)m.N;
+		time /= (double)N;
 		System.out.println(time);
+	}
+	
+	public static void main(String... args) {
+		(new Main()).simulation();		
 	}
 }

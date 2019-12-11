@@ -36,12 +36,12 @@ public class SimulationHandler {
 		
 		int numOccupied = (int)(probability * parkingLot.length);
 		
-		ArrayList<Integer> a = new ArrayList<Integer>();
+		ArrayList<Integer> indexList = new ArrayList<Integer>();
 		for (int i = 0; i < parkingLot.length; i++){ 
-		    a.add(i);
+			indexList.add(i);
 		}
-		Collections.shuffle(a);
-		for(int k : a.subList(0,numOccupied)) {
+		Collections.shuffle(indexList);
+		for(int k : indexList.subList(0,numOccupied)) {
 			parkingLot[k] = true;
 			occupiedSpotIndices.add(k);
 		}
@@ -52,8 +52,7 @@ public class SimulationHandler {
 		parkingLot[occupiedSpotIndices.get(index)] = false;
 		occupiedSpotIndices.remove(index);
 	}
-	
-	// TODO: change to time
+
 	public double updateReturnTime() {
 		double distance = 0;
 		
@@ -68,6 +67,7 @@ public class SimulationHandler {
 				}
 			}
 		break;
+		// TODO: Rest of strategies
 		default:
 		break;		
 		}
@@ -75,6 +75,7 @@ public class SimulationHandler {
 		return distance;
 	}
 	
+	// TODO: data vis
 	//temporary bruh	
 	public void printParkingLot() {
 		System.out.println(boolToInt(parkingLot[0]) + "" + boolToInt(parkingLot[1]));
