@@ -8,6 +8,8 @@ public class SimulationHandler {
 	private ArrayList<Car> activeCars;
 	private ArrayList<Integer> removeIndex;
 	
+	private Random random;
+	
 	private final int SPAWN_TIME = 100; // TODO: determine SPAWN_TIME
 	private int time;
 	
@@ -15,6 +17,8 @@ public class SimulationHandler {
 		this.parkingLot = parkingLot;
 		this.activeCars = new ArrayList<Car>();
 		this.removeIndex = new ArrayList<Integer>();
+		
+		random = new Random();
 		
 		this.time = 0;
 	}
@@ -40,7 +44,11 @@ public class SimulationHandler {
 			Car car = new CarStrategyFirst();
 			activeCars.add(0, car);
 			
-			// TODO: make random parking spot empty
+			ArrayList<ParkingSpot> occupiedSpots = new ArrayList<ParkingSpot>();
+			for(ParkingSpot p : this.parkingLot.parkingSpots) {
+				if(p.isOccupied) occupiedSpots.add(p);
+			}
+			occupiedSpots.get(random.nextInt(occupiedSpots.size())).isOccupied = false;
 			
 			time = 0;
 		}
