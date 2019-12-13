@@ -20,7 +20,7 @@ public class SimulationHandler {
 	
 	private final double occupancyRate = 0.5;
 	
-	private final int strategyNumber = 3;
+	private final int strategyNumber = 1;
 	
 	private ArrayList<Integer> occupiedSpotIndices;
 	
@@ -104,9 +104,7 @@ public class SimulationHandler {
 		default:
 		break;		
 		}
-		System.out.print("aAAAAAAAAAAAAAAAA\n");
 		emptyRandomParkingSpot();
-		System.out.print("aAAAAAAAAAAAAAAAA\n");
 		return distance;
 	}
 	
@@ -115,7 +113,7 @@ public class SimulationHandler {
 	public void printParkingLot() {
 		for(int i = 0; i < 10; i++) {
 			for(int j = 0; j < 10; j++) {
-				System.out.print(boolToInt(parkingLot[i+j]));
+				System.out.print(boolToInt(parkingLot[10*i+j]));
 			}
 			System.out.print("\n");
 		}
@@ -123,6 +121,7 @@ public class SimulationHandler {
 	}
 	
 	private int boolToInt(boolean b) {
-		return b ? 1 : 0;
+		if(b) return 1;
+		return 0;
 	}
 }
