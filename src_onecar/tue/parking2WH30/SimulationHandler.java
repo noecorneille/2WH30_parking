@@ -4,59 +4,65 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.Scanner;
 
 public class SimulationHandler {
 	private boolean[] parkingLot;
-	
-	private double[] drivingDistances;
-	private double[] walkingDistances;;
 	private final double parkingLotLength = 5;
 	
-	private final double drivespeed = 4;
-	private final double walkspeed = 1;
+	private final double driveSpeed = 4;
+	private final double walkSpeed = 1;
 	
 	private final double occupancyRate = 0.5;
 	
-	private final int strategyNumber = 1;
+	private final int strategyNumber = 2;
 	
-	private ArrayList<Integer> occupiedSpotIndices;
-	
+	private ArrayList<ParkingSpot> occupiedSpots;
+	private ArrayList<ParkingSpot> unoccupiedSpots;
+	private Comparator<ParkingSpot> compare;
+		
 	private Random random;
 		
 	public SimulationHandler() {
-		occupiedSpotIndices = new ArrayList<Integer>();
+		occupiedSpots = new ArrayList<ParkingSpot>();
+		unoccupiedSpots = new ArrayList<ParkingSpot>();
 		random = new Random();
 		
 		initParkingSpace(occupancyRate);
 	}
 	
 	private void initParkingSpace(double probability) {
+		double[] drivingDistances = new double[100];
+		double[] walkingDistances = new double[100];
+		
+		// File i/o
 		try {
 			Scanner s = new Scanner(new File("drivingDistances.txt")).useLocale(Locale.US);
-			drivingDistances = new double[100];
 			for(int i = 0; i < drivingDistances.length; i++) {
 				drivingDistances[i] = s.nextDouble();
 			}
 			
 			s = new Scanner(new File("walkingDistances.txt")).useLocale(Locale.US);
-			walkingDistances = new double[100];
 			for(int i = 0; i < walkingDistances.length; i++) {
 				walkingDistances[i] = s.nextDouble();
 			}
-			
+			s.close();				
 		} catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		
-		
+		// Generate empty parking lot
 		parkingLot = new boolean[100];
 		for(int i = 0; i < parkingLot.length; i++) {
 			parkingLot[i] = false;
+			unoccupiedSpots.add(new ParkingSpot(i, drivingDistances[i]/driveSpeed + walkingDistances[i]/walkSpeed));
 		}
 		
+		// Occupy a set number of parking spots randomly
 		int numOccupied = (int)(probability * parkingLot.length);
 		
 		ArrayList<Integer> indexList = new ArrayList<Integer>();
@@ -64,16 +70,41 @@ public class SimulationHandler {
 			indexList.add(i);
 		}
 		Collections.shuffle(indexList);
-		for(int k : indexList.subList(0,numOccupied)) {
+		List<Integer> indices = indexList.subList(0, numOccupied);
+		Collections.sort(indices, (a,b) -> Integer.compare(b, a));
+		
+		for(int k : indices) {
 			parkingLot[k] = true;
-			occupiedSpotIndices.add(k);
+			occupiedSpots.add(unoccupiedSpots.get(k));
+			unoccupiedSpots.remove(k);
 		}
+		
+		
+		// Sort parkingSpot lists based on strategy
+		switch(strategyNumber) {
+			case 1: // Sort by index
+				this.compare = ParkingSpot.indexComparator;
+				break;
+			case 2: // Sort by travel time
+				this.compare = ParkingSpot.travelTimeComparator;
+				break;
+			// TODO: Rest of strategies
+			default:
+				break;	
+		}
+		
+		Collections.sort(unoccupiedSpots, this.compare);
+		Collections.sort(occupiedSpots, this.compare);
 	}
 	
+	// Unoccupies a parking spot randomly
 	private void emptyRandomParkingSpot() {
-		int index = random.nextInt(occupiedSpotIndices.size());
-		parkingLot[occupiedSpotIndices.get(index)] = false;
-		occupiedSpotIndices.remove(index);
+		int index = random.nextInt(occupiedSpots.size()); // Get random index from occupied spots
+		ParkingSpot p = occupiedSpots.get(index); // Save this parkingspot to memory
+		
+		parkingLot[p.getIndex()] = false; // Ass parkingspot to lists of unoccupied spots
+		insert(unoccupiedSpots, p);
+		occupiedSpots.remove(index);
 	}
 
 	public double updateReturnTime() {
@@ -81,24 +112,21 @@ public class SimulationHandler {
 		
 		switch(strategyNumber) {
 		case 1: // First available
-			for(int i = 0; i < parkingLot.length; i++) {
-				if(!parkingLot[i]) {
-					distance = drivingDistances[i]/drivespeed + walkingDistances[i]/walkspeed;
-					parkingLot[i] = true;
-					occupiedSpotIndices.add(i);
-					break;
-				}
-			}
+			ParkingSpot p1 = unoccupiedSpots.get(0); // First available is first in list
+			insert(occupiedSpots, p1);	// Occupy spot
+			parkingLot[p1.getIndex()] = true;
+			
+			distance += p1.getTravelTime();
+			unoccupiedSpots.remove(0);
+			
 		break;
-		case 2:
-			for(int i = parkingLot.length-1; i >= 0; i--) {
-				if(!parkingLot[i]) {
-					distance = (drivingDistances[i] + parkingLotLength)/drivespeed + walkingDistances[i]/walkspeed;
-					parkingLot[i] = true;
-					occupiedSpotIndices.add(i);
-					break;
-				}
-			}
+		case 2: // Best available
+			ParkingSpot p2 = unoccupiedSpots.get(0); // Best available is first in list
+			insert(occupiedSpots, p2); // Occupy spot
+			parkingLot[p2.getIndex()] = true;
+			
+			distance += p2.getTravelTime() + parkingLotLength;
+			unoccupiedSpots.remove(0);
 		break;
 		// TODO: Rest of strategies
 		default:
@@ -123,5 +151,13 @@ public class SimulationHandler {
 	private int boolToInt(boolean b) {
 		if(b) return 1;
 		return 0;
+	}
+	
+	private void insert(ArrayList<ParkingSpot> list, ParkingSpot element) {
+		int index = Collections.binarySearch(list, element, this.compare); // Inserts element in O(log n) time
+		if(index < 0) { 
+			index = -index - 1;
+		}
+		list.add(index, element);
 	}
 }
