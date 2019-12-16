@@ -29,16 +29,19 @@ public class Main {
 	public void multipleRuns(int nrRuns, Double occupancyRates[]) {
 		try {
 			// CSV file location
-			String csvFile = "C:/Users/20171983/OneDrive - TU Eindhoven/Universiteit/2019-2020/Q2 2WH30 Mathematical modelling/source code/Java/2WH30_parking/simulationOutput.csv";
+			String csvFile = "simulationOutput.csv";
 			// FileWriter object to output location
 			FileWriter writer = new FileWriter(csvFile);
 			
 			for (int j=0; j < occupancyRates.length; j++) {
-				writer.write(occupancyRates[j].toString());
+				writer.write(occupancyRates[j].toString() + ", ");
+				Double simResult = 0.0d;
 				for (int i = 0; i < nrRuns; i++) {
-					Double simResult = (Double) this.simulation(occupancyRates[j]);
-					writer.write(simResult.toString() + ", ");
+					simResult += (Double) this.simulation(occupancyRates[j]);
+					
 				}
+				simResult /= nrRuns;
+				writer.write(simResult.toString() + ", ");
 				writer.write("\n");
 			}
 			// close the writer

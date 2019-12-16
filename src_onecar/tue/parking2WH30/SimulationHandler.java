@@ -12,12 +12,12 @@ import java.util.Scanner;
 
 public class SimulationHandler {
 	private boolean[] parkingLot;
-	private final double parkingLotLength = 5;
+	private final double parkingLotLength = 298;
 	
 	private final double driveSpeed = 4;
 	private final double walkSpeed = 1;
 	
-	private final double occupancyRate = 0.99;
+	//private final double occupancyRate = 0.99;
 	
 	private final int strategyNumber = 1;
 	
@@ -40,14 +40,14 @@ public class SimulationHandler {
 		
 		// File i/o
 		try {
-			Scanner s = new Scanner(new File("C:/Users/20171983/OneDrive - TU Eindhoven/Universiteit/2019-2020/Q2 2WH30 Mathematical modelling/source code/Java/2WH30_parking/drivingDistances.txt")).useLocale(Locale.US);
-			//Scanner s = new Scanner(new File("drivingDistances.txt")).useLocale(Locale.US);
+			//Scanner s = new Scanner(new File("C:/Users/20171983/OneDrive - TU Eindhoven/Universiteit/2019-2020/Q2 2WH30 Mathematical modelling/source code/Java/2WH30_parking/drivingDistances.txt")).useLocale(Locale.US);
+			Scanner s = new Scanner(new File("drivingDistances.txt")).useLocale(Locale.US);
 			for(int i = 0; i < drivingDistances.length; i++) {
 				drivingDistances[i] = s.nextDouble();
 			}
 			
-			s = new Scanner(new File("C:/Users/20171983/OneDrive - TU Eindhoven/Universiteit/2019-2020/Q2 2WH30 Mathematical modelling/source code/Java/2WH30_parking/walkingDistances.txt")).useLocale(Locale.US);
-			//s = new Scanner(new File("walkingDistances.txt")).useLocale(Locale.US);
+			//s = new Scanner(new File("C:/Users/20171983/OneDrive - TU Eindhoven/Universiteit/2019-2020/Q2 2WH30 Mathematical modelling/source code/Java/2WH30_parking/walkingDistances.txt")).useLocale(Locale.US);
+			s = new Scanner(new File("walkingDistances.txt")).useLocale(Locale.US);
 			for(int i = 0; i < walkingDistances.length; i++) {
 				walkingDistances[i] = s.nextDouble();
 			}
@@ -126,7 +126,7 @@ public class SimulationHandler {
 			insert(occupiedSpots, p2); // Occupy spot
 			parkingLot[p2.getIndex()] = true;
 			
-			distance += p2.getTravelTime() + parkingLotLength;
+			distance += p2.getTravelTime() + parkingLotLength/driveSpeed;
 			unoccupiedSpots.remove(0);
 		break;
 		// TODO: Rest of strategies
