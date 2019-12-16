@@ -26,7 +26,7 @@ public class Main {
 		return time;
 	}
 	
-	public void multipleRuns(int nrRuns, Double occupancyRates[]) {
+	public void multipleRuns(int nrRuns, Double... occupancyRates) {
 		try {
 			// CSV file location
 			String csvFile = "simulationOutput.csv";
