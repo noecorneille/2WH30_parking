@@ -17,9 +17,9 @@ public class SimulationHandler {
 	private final double driveSpeed = 4;
 	private final double walkSpeed = 1;
 	
-	private final double occupancyRate = 0.5;
+	private final double occupancyRate = 0.99;
 	
-	private final int strategyNumber = 2;
+	private final int strategyNumber = 1;
 	
 	private ArrayList<ParkingSpot> occupiedSpots;
 	private ArrayList<ParkingSpot> unoccupiedSpots;
@@ -27,11 +27,10 @@ public class SimulationHandler {
 		
 	private Random random;
 		
-	public SimulationHandler() {
+	public SimulationHandler(double occupancyRate) {
 		occupiedSpots = new ArrayList<ParkingSpot>();
 		unoccupiedSpots = new ArrayList<ParkingSpot>();
 		random = new Random();
-		
 		initParkingSpace(occupancyRate);
 	}
 	
@@ -41,18 +40,20 @@ public class SimulationHandler {
 		
 		// File i/o
 		try {
-			Scanner s = new Scanner(new File("drivingDistances.txt")).useLocale(Locale.US);
+			Scanner s = new Scanner(new File("C:/Users/20171983/OneDrive - TU Eindhoven/Universiteit/2019-2020/Q2 2WH30 Mathematical modelling/source code/Java/2WH30_parking/drivingDistances.txt")).useLocale(Locale.US);
+			//Scanner s = new Scanner(new File("drivingDistances.txt")).useLocale(Locale.US);
 			for(int i = 0; i < drivingDistances.length; i++) {
 				drivingDistances[i] = s.nextDouble();
 			}
 			
-			s = new Scanner(new File("walkingDistances.txt")).useLocale(Locale.US);
+			s = new Scanner(new File("C:/Users/20171983/OneDrive - TU Eindhoven/Universiteit/2019-2020/Q2 2WH30 Mathematical modelling/source code/Java/2WH30_parking/walkingDistances.txt")).useLocale(Locale.US);
+			//s = new Scanner(new File("walkingDistances.txt")).useLocale(Locale.US);
 			for(int i = 0; i < walkingDistances.length; i++) {
 				walkingDistances[i] = s.nextDouble();
 			}
 			s.close();				
 		} catch(FileNotFoundException e) {
-			e.printStackTrace();
+			e.printStackTrace();	
 		}
 		
 		// Generate empty parking lot
@@ -160,4 +161,5 @@ public class SimulationHandler {
 		}
 		list.add(index, element);
 	}
+
 }
