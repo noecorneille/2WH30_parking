@@ -19,7 +19,7 @@ public class SimulationHandler {
 	
 	//private final double occupancyRate = 0.99;
 	
-	private final int strategyNumber = 1;
+	private int strategyNumber = 1;
 	
 	private ArrayList<ParkingSpot> occupiedSpots;
 	private ArrayList<ParkingSpot> unoccupiedSpots;
@@ -27,10 +27,11 @@ public class SimulationHandler {
 		
 	private Random random;
 		
-	public SimulationHandler(double occupancyRate) {
+	public SimulationHandler(double occupancyRate, int strategyNumber) {
 		occupiedSpots = new ArrayList<ParkingSpot>();
 		unoccupiedSpots = new ArrayList<ParkingSpot>();
 		random = new Random();
+		this.strategyNumber = strategyNumber;
 		initParkingSpace(occupancyRate);
 	}
 	
@@ -89,6 +90,8 @@ public class SimulationHandler {
 			case 2: // Sort by travel time
 				this.compare = ParkingSpot.travelTimeComparator;
 				break;
+			case 4:
+				return; // dont bother sorting
 			// TODO: Rest of strategies
 			default:
 				break;	
@@ -129,6 +132,23 @@ public class SimulationHandler {
 			distance += p2.getTravelTime() + parkingLotLength/driveSpeed;
 			unoccupiedSpots.remove(0);
 		break;
+		case 4: // Completely random one
+			int r = random.nextInt(unoccupiedSpots.size());
+			
+			ParkingSpot p3 = unoccupiedSpots.get(r);
+			occupiedSpots.add(p3);
+			unoccupiedSpots.remove(r);
+			parkingLot[p3.getIndex()] = true;
+			
+			distance += p3.getTravelTime();
+			
+			int index = random.nextInt(occupiedSpots.size()); // Get random index from occupied spots
+			ParkingSpot pr = occupiedSpots.get(index); // Save this parkingspot to memory
+			
+			parkingLot[pr.getIndex()] = false; // Ass parkingspot to lists of unoccupied spots
+			unoccupiedSpots.add(pr);
+			occupiedSpots.remove(index);
+			return distance;
 		// TODO: Rest of strategies
 		default:
 		break;		

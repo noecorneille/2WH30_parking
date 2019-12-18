@@ -7,12 +7,16 @@ import java.io.FileWriter;
 
 public class Main {
 	public SimulationHandler sim;
-	public final int N = 1000000;
+	public final int N = 100000;
+	
+	public final int strategy = 1;
 	
 	
 	public double simulation(double occupancyRate) {
-		sim = new SimulationHandler(occupancyRate);
+		sim = new SimulationHandler(occupancyRate, strategy);
 		
+		
+		long start = System.nanoTime();
 		// TODO: data vis
 		double time = 0;
 		for(int i = 0; i < N; i++) {
@@ -23,6 +27,9 @@ public class Main {
 		}
 		//sim.printParkingLot();
 		time /= (double)N;
+		long end = System.nanoTime();
+		System.out.println(N + " iterations in " + (end-start)/1000000d + " ms");
+		
 		return time;
 	}
 	
