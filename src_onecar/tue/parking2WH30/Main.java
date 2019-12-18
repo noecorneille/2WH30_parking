@@ -42,13 +42,12 @@ public class Main {
 			
 			for (int j=0; j < occupancyRates.length; j++) {
 				writer.write(occupancyRates[j].toString() + ", ");
-				Double simResult = 0.0d;
 				for (int i = 0; i < nrRuns; i++) {
-					simResult += (Double) this.simulation(occupancyRates[j]);
-					
+					writer.write(((Double) this.simulation(occupancyRates[j])).toString());	
+					if (i != nrRuns - 1) {
+						writer.write(", ");
+					}
 				}
-				simResult /= nrRuns;
-				writer.write(simResult.toString() + ", ");
 				writer.write("\n");
 			}
 			// close the writer
@@ -71,6 +70,6 @@ public class Main {
 				0.67, 0.68, 0.69, 0.7, 0.71, 0.72, 0.73, 0.74, 0.75, 0.76, 0.77,
 				0.78, 0.79, 0.8, 0.81, 0.82, 0.83, 0.84, 0.85, 0.86, 0.87, 0.88,
 				0.89, 0.9, 0.91, 0.92, 0.93, 0.94, 0.95, 0.96, 0.97, 0.98, 0.99};
-		(new Main()).multipleRuns(1,occupancy);
+		(new Main()).multipleRuns(2,occupancy);
 	}
 }

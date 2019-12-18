@@ -41,14 +41,14 @@ public class SimulationHandler {
 		
 		// File i/o
 		try {
-			//Scanner s = new Scanner(new File("C:/Users/20171983/OneDrive - TU Eindhoven/Universiteit/2019-2020/Q2 2WH30 Mathematical modelling/source code/Java/2WH30_parking/drivingDistances.txt")).useLocale(Locale.US);
-			Scanner s = new Scanner(new File("drivingDistances.txt")).useLocale(Locale.US);
+			Scanner s = new Scanner(new File("/Users/20171983/OneDrive - TU Eindhoven/Universiteit/2019-2020/Q2 2WH30 Mathematical modelling/source_code/2WH30_parking/drivingDistances.txt")).useLocale(Locale.US);
+			//Scanner s = new Scanner(new File("drivingDistances.txt")).useLocale(Locale.US);
 			for(int i = 0; i < drivingDistances.length; i++) {
 				drivingDistances[i] = s.nextDouble();
 			}
 			
-			//s = new Scanner(new File("C:/Users/20171983/OneDrive - TU Eindhoven/Universiteit/2019-2020/Q2 2WH30 Mathematical modelling/source code/Java/2WH30_parking/walkingDistances.txt")).useLocale(Locale.US);
-			s = new Scanner(new File("walkingDistances.txt")).useLocale(Locale.US);
+			s = new Scanner(new File("/Users/20171983/OneDrive - TU Eindhoven/Universiteit/2019-2020/Q2 2WH30 Mathematical modelling/source_code/2WH30_parking/walkingDistances.txt")).useLocale(Locale.US);
+			//s = new Scanner(new File("walkingDistances.txt")).useLocale(Locale.US);
 			for(int i = 0; i < walkingDistances.length; i++) {
 				walkingDistances[i] = s.nextDouble();
 			}
