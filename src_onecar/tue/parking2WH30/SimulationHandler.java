@@ -90,6 +90,9 @@ public class SimulationHandler {
 			case 2: // Sort by travel time
 				this.compare = ParkingSpot.travelTimeComparator;
 				break;
+			case 3:
+				this.compare = ParkingSpot.indexComparator;
+				break;
 			case 4:
 				return; // dont bother sorting
 			// TODO: Rest of strategies
@@ -132,15 +135,29 @@ public class SimulationHandler {
 			distance += p2.getTravelTime() + parkingLotLength/driveSpeed;
 			unoccupiedSpots.remove(0);
 		break;
-		case 4: // Completely random one
-			int r = random.nextInt(unoccupiedSpots.size());
+		case 3:
+			double rt = random.nextDouble();
+			int f = 0;
+			if(rt > 1/unoccupiedSpots.size()) {
+				f = (int) Math.ceil((double)unoccupiedSpots.size() - 1/rt) - 1;
+			}
 			
-			ParkingSpot p3 = unoccupiedSpots.get(r);
-			occupiedSpots.add(p3);
-			unoccupiedSpots.remove(r);
+			ParkingSpot p3 = unoccupiedSpots.get(f); 
+			insert(occupiedSpots, p3);	// Occupy spot
 			parkingLot[p3.getIndex()] = true;
 			
 			distance += p3.getTravelTime();
+			unoccupiedSpots.remove(0);			
+		break;
+		case 4: // Completely random one
+			int r = random.nextInt(unoccupiedSpots.size());
+			
+			ParkingSpot p4 = unoccupiedSpots.get(r);
+			occupiedSpots.add(p4);
+			unoccupiedSpots.remove(r);
+			parkingLot[p4.getIndex()] = true;
+			
+			distance += p4.getTravelTime();
 			
 			int index = random.nextInt(occupiedSpots.size()); // Get random index from occupied spots
 			ParkingSpot pr = occupiedSpots.get(index); // Save this parkingspot to memory
