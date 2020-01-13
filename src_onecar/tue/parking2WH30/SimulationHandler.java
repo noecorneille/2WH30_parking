@@ -158,6 +158,9 @@ public class SimulationHandler {
 			parkingLot[p4.getIndex()] = true;
 			
 			distance += p4.getTravelTime();
+			if(random.nextDouble() < Math.pow((1.0d - 1/(double)unoccupiedSpots.size()), (double)unoccupiedSpots.size())) {
+				distance += parkingLotLength/driveSpeed;
+			}
 			
 			int index = random.nextInt(occupiedSpots.size()); // Get random index from occupied spots
 			ParkingSpot pr = occupiedSpots.get(index); // Save this parkingspot to memory
